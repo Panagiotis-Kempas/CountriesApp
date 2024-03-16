@@ -1,6 +1,7 @@
 ﻿using Contracts_;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,12 +20,14 @@ namespace Repository
             RepositoryContext.Set<T>()
             .AsNoTracking() :
             RepositoryContext.Set<T>();
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges) => 
-            !trackChanges ? 
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges) =>
+            !trackChanges ?
             RepositoryContext.Set<T>().Where(expression)
-            .AsNoTracking() : 
+            .AsNoTracking() :
             RepositoryContext.Set<T>().Where(expression);
         public void Create(T entity) => RepositoryContext.Set<T>().Add(entity);
+
+        public void CreateInBulk(IEnumerable<T> entities) => RepositoryContext.Set<IEnumerable<T>>().AddRange(entities);
 
         public void Update(T entity) => RepositoryContext.Set<T>().Update(entity);
         public void Delete(T entity) => RepositoryContext.Set<T>().Remove(entity);

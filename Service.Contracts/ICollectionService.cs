@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Service.Contracts
 {
     public interface ICollectionService
     {
-        int ReturnSecondLargestInteger(RequestObj requestOb);
+        ResponseObj ReturnSecondLargestInteger(RequestObj requestOb);
     }
 }

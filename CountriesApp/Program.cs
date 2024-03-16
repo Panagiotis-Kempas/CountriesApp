@@ -3,6 +3,8 @@ using CountriesApp;
 using CountriesApp.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
+using Service;
+using Service.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,8 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddScoped<ICollectionService,CollectionService>();
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddControllers();
 
 var app = builder.Build();

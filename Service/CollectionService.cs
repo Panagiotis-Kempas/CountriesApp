@@ -1,5 +1,7 @@
 ﻿using Entities;
+using Entities.Exceptions;
 using Service.Contracts;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +12,24 @@ namespace Service
 {
     public class CollectionService : ICollectionService
     {
-        public int ReturnSecondLargestInteger(RequestObj requestOb)
+        public ResponseObj ReturnSecondLargestInteger(RequestObj requestOb)
         {
-            
+            int secondLargestInteger;
+            if(requestOb.RequestArrayObj.Count() < 1)
+            {
+                throw new EmptyCollectionException();
+            }
+
+            if (requestOb.RequestArrayObj.Count() == 1)
+            {
+                secondLargestInteger = requestOb.RequestArrayObj.First();
+            }
+            else
+            {
+                var descendingCollection = requestOb.RequestArrayObj.OrderByDescending(x => x).ToList();
+                secondLargestInteger = descendingCollection[1];
+            }
+            return new ResponseObj { SecondLargestInteger = secondLargestInteger };
         }
     }
 }
