@@ -1,3 +1,5 @@
+using Contracts_;
+using CountriesApp;
 using CountriesApp.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
@@ -8,19 +10,25 @@ LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentD
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
-
+builder.Services.ConfigureRepositoryManager();
+builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureSqlContext(builder.Configuration);
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment()) 
-    app.UseDeveloperExceptionPage();
-else app.UseHsts();
+//var logger = app.Services.GetRequiredService<ILoggerManager>();
+//app.ConfigureExceptionHandler(logger);
+app.UseExceptionHandler(opt => { });
+if (app.Environment.IsProduction())
+    app.UseHsts();
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
-{ 
+{
     ForwardedHeaders = ForwardedHeaders.All
 });
 
