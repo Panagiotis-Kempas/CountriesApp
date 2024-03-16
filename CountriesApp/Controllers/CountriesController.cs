@@ -14,9 +14,9 @@ namespace CountriesApp.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCountries()
+        public async Task<IActionResult> GetAllCountries(CancellationToken cancellationToken)
         {
-            var countries = await _service.CountryService.GetAllCountriesAsync(trackChanges: false);
+            var countries = await _service.CountryService.GetAllCountriesAsync(trackChanges: false, cancellationToken);
 
             return Ok(countries);
         }

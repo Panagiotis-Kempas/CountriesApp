@@ -15,6 +15,7 @@ namespace Repository
         private readonly Lazy<ICapitalRepository> _capitalRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
+            _repositoryContext = repositoryContext;
             _countryRepository = new Lazy<ICountryRepository>(() => new CountryRepository(repositoryContext));
             _borderRepository = new Lazy<IBorderRepository>(() => new BorderRepository(repositoryContext));
             _capitalRepository = new Lazy<ICapitalRepository>(() => new CapitalRepository(repositoryContext));
@@ -25,6 +26,6 @@ namespace Repository
 
         public ICapitalRepository Capital => _capitalRepository.Value;
 
-        public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
+        public async Task SaveAsync(CancellationToken cancellationToken) => await _repositoryContext.SaveChangesAsync(cancellationToken);
     }
 }

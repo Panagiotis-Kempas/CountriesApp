@@ -11,6 +11,6 @@ namespace Contracts_
         ICountryRepository Country { get; }
         IBorderRepository Border { get; }
         ICapitalRepository Capital { get; }
-        Task SaveAsync();
+        Task SaveAsync(CancellationToken cancellationToken);
     }
 }

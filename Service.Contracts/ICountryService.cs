@@ -9,6 +9,6 @@ namespace Service.Contracts
 {
     public interface ICountryService
     {
-        Task<IEnumerable<CountryDto>> GetAllCountriesAsync(bool trackChanges);
+        Task<IEnumerable<CountryDto>> GetAllCountriesAsync(bool trackChanges,CancellationToken cancellationToken);
     }
 }

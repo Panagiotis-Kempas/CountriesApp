@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Shared;
 using Shared.DataTransferObjects;
 using System.Runtime.CompilerServices;
 
@@ -12,7 +13,7 @@ namespace CountriesApp.Mappers
             {
                 CommonName = countryDto.CommonName,
             };
-            if(countryDto.Capitals != null && countryDto.Capitals.Count > 0 ) 
+            if (countryDto.Capitals != null && countryDto.Capitals.Count > 0)
             {
                 entity.Capitals = new List<Capital>();
                 foreach (var capital in countryDto.Capitals)
@@ -55,5 +56,49 @@ namespace CountriesApp.Mappers
             }
             return dto;
         }
+
+        public static Country ToEntity(this ResponseCountryObject countryObject)
+        {
+            var entity = new Country()
+            {
+                CommonName = countryObject.Name.Common
+            };
+
+            if(countryObject.Capital is not null && countryObject.Capital.Count > 0)
+            {
+                entity.Capitals = new List<Capital>();
+                foreach (var capital in countryObject.Capital)
+                {
+                    entity.Capitals.Add(new Capital()
+                    {
+                        Name = capital
+                    });
+                }
+            }
+
+            if (countryObject.Borders is not null && countryObject.Borders.Count > 0)
+            {
+                entity.Borders = new List<Border>();
+                foreach (var border in countryObject.Borders)
+                {
+                    entity.Borders.Add(new Border()
+                    {
+                        Name = border
+                    });
+                }
+            }
+            return entity;
+        }
+        public static IEnumerable<CountryDto> ToDtos(this IEnumerable<Country> countries)
+        {
+            var countryDtos = new List<CountryDto>();
+            foreach (var country in countries)
+            {
+                countryDtos.Add(country.ToDto());
+            }
+            return countryDtos; 
+        }
+
     }
 }
+

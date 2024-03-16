@@ -16,12 +16,12 @@ namespace Repository
         {
         }
 
-        public async Task<IEnumerable<Country>> GetAllCountriesAsync(bool trackChanges) =>
+        public async Task<IEnumerable<Country>> GetAllCountriesAsync(bool trackChanges, CancellationToken cancellationToken) =>
             await FindAll(trackChanges)
-            .Include(x=> x.Borders)
-            .Include(x=> x.Capitals)
+            .Include(x => x.Borders)
+            .Include(x => x.Capitals)
             .OrderBy(c => c.CommonName)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
         public void CreateCountry(Country company) => Create(company);
 
         public void CreateMultipleCountries(IEnumerable<Country> countries) => CreateInBulk(countries);
