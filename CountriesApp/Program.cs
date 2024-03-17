@@ -13,17 +13,18 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
-builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureServices();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddScoped<ICollectionService,CollectionService>();
-builder.Services.AddMemoryCache();
-builder.Services.AddControllers();
+builder.Services.ConfigureRateLimitingOptions();
+builder.Services.AddControllers(config =>
+{
+    config.RespectBrowserAcceptHeader = true;
+    config.ReturnHttpNotAcceptable = true;
+}).AddXmlDataContractSerializerFormatters();
 
 var app = builder.Build();
 
-//var logger = app.Services.GetRequiredService<ILoggerManager>();
-//app.ConfigureExceptionHandler(logger);
 app.UseExceptionHandler(opt => { });
 if (app.Environment.IsProduction())
     app.UseHsts();
@@ -36,9 +37,16 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.All
 });
 
+app.UseRateLimiter();
 app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Countries Api");
+});
 
 app.MapControllers();
 

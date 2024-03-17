@@ -23,7 +23,5 @@ namespace Repository
             .OrderBy(c => c.CommonName)
             .ToListAsync(cancellationToken);
         public void CreateCountry(Country company) => Create(company);
-
-        public void CreateMultipleCountries(IEnumerable<Country> countries) => CreateInBulk(countries);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service.Contracts;
 
 namespace CountriesApp.Controllers
@@ -17,6 +18,7 @@ namespace CountriesApp.Controllers
         }
 
         [HttpPost]
+        [DisableRateLimiting]
         public IActionResult GetSecondLargestInteger(RequestObj requestObj)
         {
             var result = _collectionService.ReturnSecondLargestInteger(requestObj);

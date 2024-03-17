@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service.Contracts;
 
 namespace CountriesApp.Controllers
@@ -8,15 +9,16 @@ namespace CountriesApp.Controllers
     [ApiController]
     public class CountriesController : ControllerBase
     {
-        private readonly IServiceManager _service;
+        private readonly ICountryService _service;
 
-        public CountriesController(IServiceManager service) => _service = service;
+        public CountriesController(ICountryService service) => _service = service;
 
 
         [HttpGet]
+        [EnableRateLimiting("CountriesPolicy")]
         public async Task<IActionResult> GetAllCountries(CancellationToken cancellationToken)
         {
-            var countries = await _service.CountryService.GetAllCountriesAsync(trackChanges: false, cancellationToken);
+            var countries = await _service.GetAllCountriesAsync(trackChanges: false, cancellationToken);
 
             return Ok(countries);
         }

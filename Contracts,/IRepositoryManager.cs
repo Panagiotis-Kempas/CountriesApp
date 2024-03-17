@@ -9,8 +9,6 @@ namespace Contracts_
     public interface IRepositoryManager
     {
         ICountryRepository Country { get; }
-        IBorderRepository Border { get; }
-        ICapitalRepository Capital { get; }
         Task SaveAsync(CancellationToken cancellationToken);
     }
 }

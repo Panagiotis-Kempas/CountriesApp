@@ -11,6 +11,5 @@ namespace Contracts_
     {
         Task<IEnumerable<Country>> GetAllCountriesAsync(bool trackChanges, CancellationToken cancellationToken);
         void CreateCountry(Country company);
-        void CreateMultipleCountries(IEnumerable<Country> countries);
     }
 }
