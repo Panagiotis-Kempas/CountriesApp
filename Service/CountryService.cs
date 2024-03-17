@@ -34,7 +34,6 @@ namespace Service
         public async Task<IEnumerable<CountryDto>> GetAllCountriesAsync(bool trackChanges, CancellationToken cancellationToken)
         {
             var countriesToReturn = Enumerable.Empty<CountryDto>();
-            var cacheData = _cache.Get(countryListCacheKey);
             if (_cache.TryGetValue(countryListCacheKey, out IEnumerable<Country>? countriesFromCache))
             {
                 if (countriesFromCache is not null && countriesFromCache.Any())
@@ -50,12 +49,7 @@ namespace Service
                     var countriesFromDb = await _repository.Country.GetAllCountriesAsync(trackChanges, cancellationToken);
                     if (countriesFromDb is not null && countriesFromDb.Any())
                     {
-                        var cacheEntryOptions = new MemoryCacheEntryOptions()
-                             .SetSlidingExpiration(TimeSpan.FromSeconds(60))
-                             .SetAbsoluteExpiration(TimeSpan.FromSeconds(3600))
-                             .SetPriority(CacheItemPriority.Normal);
-
-                        _cache.Set(countryListCacheKey, countriesFromDb, cacheEntryOptions);
+                        SetToCache(countriesFromDb);
                         countriesToReturn = countriesFromDb.ToDtos();
                     }
                     else
@@ -71,11 +65,8 @@ namespace Service
                                 countriesToSaveInDb.Add(entity);
                             }
                             await _repository.SaveAsync(cancellationToken);
-                            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                                 .SetSlidingExpiration(TimeSpan.FromSeconds(60))
-                                 .SetAbsoluteExpiration(TimeSpan.FromSeconds(3600))
-                                 .SetPriority(CacheItemPriority.Normal);
-                            _cache.Set(countryListCacheKey, countriesToSaveInDb, cacheEntryOptions);
+
+                            SetToCache(countriesToSaveInDb);
                             countriesToReturn = countriesToSaveInDb.ToDtos();
                         }
                     }
@@ -96,6 +87,16 @@ namespace Service
             var content = await response.Content.ReadAsStringAsync();
             var countries = JsonSerializer.Deserialize<List<ResponseCountryObject>>(content, options);
             return countries;
+        }
+
+        private void SetToCache(IEnumerable<Country> countries)
+        {
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                           .SetSlidingExpiration(TimeSpan.FromSeconds(60))
+                           .SetAbsoluteExpiration(TimeSpan.FromSeconds(3600))
+                           .SetPriority(CacheItemPriority.Normal);
+
+            _cache.Set(countryListCacheKey, countries, cacheEntryOptions);
         }
     }
 }

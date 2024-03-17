@@ -12,7 +12,7 @@ using Repository;
 namespace CountriesApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240315215721_DatabaseCreation")]
+    [Migration("20240317150440_DatabaseCreation")]
     partial class DatabaseCreation
     {
         /// <inheritdoc />

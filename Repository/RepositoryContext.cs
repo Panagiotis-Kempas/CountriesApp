@@ -12,10 +12,10 @@ namespace Repository
 {
     public class RepositoryContext : DbContext
     {
-        public RepositoryContext(DbContextOptions options) : base(options) { }
-        public DbSet<Country>? Countries { get; set; }
-        public DbSet<Capital>? Capitals { get; set; }
-        public DbSet<Border>? Borders { get; set; }
+        public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options) { }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Capital> Capitals { get; set; }
+        public DbSet<Border> Borders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -17,6 +17,7 @@ builder.Services.ConfigureServices();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.ConfigureRateLimitingOptions();
+
 builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = true;
@@ -26,6 +27,7 @@ builder.Services.AddControllers(config =>
 var app = builder.Build();
 
 app.UseExceptionHandler(opt => { });
+
 if (app.Environment.IsProduction())
     app.UseHsts();
 
